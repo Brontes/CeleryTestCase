@@ -61,6 +61,7 @@ class DeviceTests(TransactionTestCase):
     def celery_beat_simulation(self):
         import sys
         from celery_test_case.tasks import quick_task
+        time.sleep(3)
         cnt = 0
         while self.is_running:
             print(datetime.datetime.now(), "$$$ Call quick_task")
