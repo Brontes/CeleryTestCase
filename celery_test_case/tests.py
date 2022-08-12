@@ -38,8 +38,8 @@ class DeviceTests(TransactionTestCase):
         from celery_test_case.tasks import QUEUE_SPECIAL, QUEUE_DEFAULT
         from CeleryTestCase.celery import app as celery_app
         celery_app.control.purge()
-        for i in range(4):
-            if i < 2:
+        for i in range(3):
+            if i < 1:
                 queue = QUEUE_SPECIAL
             else:
                 queue = QUEUE_DEFAULT
