@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+  cache:
+    image: redis:latest
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - cache:/data
+#  clear_cache:
+##    Tole je samo za "not DEPLOY"
+#    build: .
+#    command: python manage.py clear_cache
+#    volumes:
+#      - .:/code
+#    extra_hosts:
+#      - "host.docker.internal:host-gateway"
+#    depends_on:
+#      - cache
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8080
+    volumes:
+      - .:/code
+    ports:
+      - "80:8080"
+#    environment:
+##      TODO: tole je pa treba drugače za deploy... sploh pa ne sme biti notri passworda.
+#      - POSTGRES_NAME=Scantron_dev
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=as
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - cache
+#      - clear_cache
+volumes:
+  cache:
+    driver: local
+
+#TODO: Probaj updatati django channelse...
