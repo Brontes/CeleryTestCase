@@ -18,7 +18,8 @@ def clear_cache():
 class DeviceTests(TransactionTestCase):
     celery_workers = []
     is_running = False
-    beat_simulation_thread = None
+    beat_simulation_thread_1 = None
+    beat_simulation_thread_2 = None
 
     @classmethod
     def setUpClass(cls):
@@ -66,6 +67,8 @@ class DeviceTests(TransactionTestCase):
             quick_task.apply_async((cnt,))
             time.sleep(.1)
             cnt += 1
+        from CeleryTestCase.celery import app as celery_app
+        celery_app.control.purge()
 
         # Wait for all celery tasks to stop
         time.sleep(5)
@@ -79,16 +82,19 @@ class DeviceTests(TransactionTestCase):
         # Celery beat simulator for testing purpose
         self.is_running = True
         import threading
-        self.beat_simulation_thread = threading.Thread(target=self.celery_beat_simulation, daemon=True)
-        self.beat_simulation_thread.start()
+        self.beat_simulation_thread_1 = threading.Thread(target=self.celery_beat_simulation, daemon=True)
+        self.beat_simulation_thread_1.start()
+        self.beat_simulation_thread_2 = threading.Thread(target=self.celery_beat_simulation, daemon=True)
+        self.beat_simulation_thread_2.start()
 
     def tearDown(self) -> None:
         self.is_running = False
-        self.beat_simulation_thread.join()
+        self.beat_simulation_thread_1.join()
+        self.beat_simulation_thread_2.join()
         super().tearDown()
         print(f'*** {self._testMethodName} *** End', datetime.datetime.now())
 
     # noinspection PyMethodMayBeStatic
     async def test_multiple_queues(self):
-        while cache.get("slow_app_runs") != 4:
+        while cache.get("slow_app_runs") != 8:
             time.sleep(.1)
