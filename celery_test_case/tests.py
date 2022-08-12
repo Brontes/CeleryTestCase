@@ -67,6 +67,8 @@ class DeviceTests(TransactionTestCase):
             time.sleep(.1)
             cnt += 1
 
+        # Wait for all celery tasks to stop
+        time.sleep(5)
         print(datetime.datetime.now(), "$$$ Exit beat simulation")
         sys.exit()
 
