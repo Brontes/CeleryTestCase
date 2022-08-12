@@ -38,8 +38,8 @@ class DeviceTests(TransactionTestCase):
         from celery_test_case.tasks import QUEUE_SPECIAL, QUEUE_DEFAULT
         from CeleryTestCase.celery import app as celery_app
         celery_app.control.purge()
-        for i in range(8):
-            if i < 3:
+        for i in range(4):
+            if i < 2:
                 queue = QUEUE_SPECIAL
             else:
                 queue = QUEUE_DEFAULT
@@ -104,5 +104,3 @@ class DeviceTests(TransactionTestCase):
                 to_long = True
                 break
         self.assertFalse(to_long, "There must be some problem with workers. This is taking way to long to execute.")
-
-
