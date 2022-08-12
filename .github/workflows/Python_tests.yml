@@ -26,12 +26,6 @@ jobs:
           redis-version: 7
       - name: Install Tox and any other packages
         run: pip install tox
-      - name: Setup PostgreSQL With Init Scripts
-        uses: m4nu56/postgresql-action@1.0
-        with:
-          postgresql db: celeryTest
-          postgresql user: celeryTest
-          postgresql password: celeryTest
       - name: Run Tox py-django31-drf3_12
         run: tox -e py-django31-drf3_12
 
