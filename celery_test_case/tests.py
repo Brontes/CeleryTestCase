@@ -38,8 +38,8 @@ class DeviceTests(TransactionTestCase):
         from celery_test_case.tasks import QUEUE_SPECIAL, QUEUE_DEFAULT
         from CeleryTestCase.celery import app as celery_app
         celery_app.control.purge()
-        for i in range(3):
-            if i == 0:
+        for i in range(8):
+            if i < 3:
                 queue = QUEUE_SPECIAL
             else:
                 queue = QUEUE_DEFAULT
@@ -96,5 +96,13 @@ class DeviceTests(TransactionTestCase):
 
     # noinspection PyMethodMayBeStatic
     async def test_multiple_queues(self):
+        tick = time.time()
+        to_long = False
         while cache.get("slow_app_runs") != 8:
             time.sleep(.1)
+            if (time.time() - tick) > 60:
+                to_long = True
+                break
+        self.assertFalse(to_long, "There must be some problem with workers. This is taking way to long to execute.")
+
+
