@@ -66,7 +66,7 @@ class DeviceTests(TransactionTestCase):
         while self.is_running:
             print(datetime.datetime.now(), "$$$ Call quick_task")
             quick_task.apply_async((cnt,))
-            time.sleep(.1)
+            time.sleep(.3)
             cnt += 1
         from CeleryTestCase.celery import app as celery_app
         celery_app.control.purge()

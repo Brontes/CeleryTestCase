@@ -19,12 +19,12 @@ QUEUE_SPECIAL = 'special'
 @shared_task(bind=True, base=AbortableTask)
 def quick_task(self, cnt):
     print(datetime.datetime.now(), "### quick_task - start")
-    time.sleep(.02)
-    if cnt % 40 == 0:
+    time.sleep(.05)
+    if cnt % 13 == 0:
         print(datetime.datetime.now(), "&&& pre apply slow_task")
         slow_task.apply_async()
         print(datetime.datetime.now(), "&&& post apply slow_task")
-    if cnt % 30 == 0:
+    if cnt % 10 == 0:
         print(datetime.datetime.now(), "&&& pre apply special_task")
         special_task.apply_async()
         print(datetime.datetime.now(), "&&& post apply special_task")
